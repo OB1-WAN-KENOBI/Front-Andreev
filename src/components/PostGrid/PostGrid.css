@@ -19,7 +19,7 @@
 
 @media (min-width: 1024px) {
   .post-card {
-    width: 22.5rem; /* 360px - фиксированная ширина по макету */
+    width: calc((100% - 80px) / 3);
   }
 }
 
