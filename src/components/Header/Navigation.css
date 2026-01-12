@@ -1,5 +1,5 @@
 .navigation {
-  margin-inline-start: 1rem;
+  /* margin-inline-start: 1rem; */
   background-color: var(--color-background);
   border-bottom: var(--border-width) solid var(--color-border);
   position: sticky;

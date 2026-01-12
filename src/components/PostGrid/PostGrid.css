@@ -1,11 +1,12 @@
 .post-grid {
   max-width: 120rem;
   margin: 0 auto;
-  padding: 3rem 20%;
+  padding: 3rem 2rem;
   display: grid;
   grid-template-columns: repeat(3, 22.5rem);
   gap: 2.5rem;
   margin-bottom: 7rem;
+  justify-content: center;
 }
 
 .post-grid-empty {
