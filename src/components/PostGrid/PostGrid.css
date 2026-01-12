@@ -1,0 +1,45 @@
+.post-grid {
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 3rem 23.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-bottom: 10rem;
+}
+
+.post-grid-empty {
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 3rem 23.75rem;
+  text-align: center;
+  font-size: 1.125rem;
+  color: var(--color-meta);
+}
+
+@media (min-width: 1024px) {
+  .post-card {
+    width: calc((100% - 80px) / 3);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .post-card {
+    width: calc((100% - 40px) / 2);
+  }
+  
+  .post-grid {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 767px) {
+  .post-card {
+    width: 100%;
+  }
+  
+  .post-grid {
+    gap: 30px;
+    padding: 2rem 1rem;
+  }
+}
