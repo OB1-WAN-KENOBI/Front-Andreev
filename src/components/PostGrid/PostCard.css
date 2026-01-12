@@ -21,7 +21,7 @@
 
 .post-card-image {
   width: 100%;
-  height: 27.375rem; /* 438px */
+  height: 15rem; /* 240px - высота изображения по макету */
   object-fit: cover;
   display: block;
   transition: transform 0.3s;
