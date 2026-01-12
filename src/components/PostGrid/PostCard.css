@@ -41,7 +41,6 @@
   color: var(--color-accent);
   font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
   margin-bottom: 1rem;
 }
 
@@ -75,6 +74,15 @@
 @media (max-width: 767px) {
   .post-card-title {
     font-size: 1.25rem;
+    font-size: var(--font-size-xlarge);
+  }
+
+  .post-card-image {
+    height: 14.5rem;
+  }
+
+  .post-card-image-wrapper {
+    margin-bottom: 0.5rem;
   }
 }
 

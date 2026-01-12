@@ -49,12 +49,12 @@
   .mobile-menu-btn {
     display: flex;
   }
-  
+
   .header-container {
-    padding: 1.8125rem var(--container-padding);
+    padding: 2rem 1.3rem;
   }
-  
+
   .search-btn {
-    right: var(--container-padding);
+    right: var(--container-padding-mobile);
   }
 }
