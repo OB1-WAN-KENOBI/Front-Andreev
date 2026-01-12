@@ -1,6 +1,7 @@
 .post-card {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
 }
 
 .post-card:hover {
