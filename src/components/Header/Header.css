@@ -6,11 +6,12 @@
 .header-container {
   max-width: var(--container-max-width);
   margin: 0 auto;
-  padding: 1.8125rem 23.75rem;
+  padding: 1.8125rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  margin-inline-start: 1rem;
 }
 
 .logo {
@@ -21,7 +22,7 @@
 
 .search-btn {
   position: absolute;
-  right: 23.75rem;
+  right: 22.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
