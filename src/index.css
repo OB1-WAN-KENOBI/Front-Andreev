@@ -68,7 +68,9 @@
 }
 
 /* CSS Reset для кроссбраузерности */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -79,7 +81,8 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
 }
