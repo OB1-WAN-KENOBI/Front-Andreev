@@ -2,7 +2,6 @@
 
 [https://ob1-wan-kenobi.github.io/Front-Andreev/](https://ob1-wan-kenobi.github.io/Front-Andreev/)
 
-
 ## Структура проекта
 
 ```
@@ -40,4 +39,3 @@ src/
 ├── main.tsx                       # Точка входа
 └── index.css                      # Глобальные стили
 ```
-

@@ -16,9 +16,3 @@ export interface MenuItem {
   label: string;
   submenu?: string[];
 }
-
-// Типы для API
-export interface ApiResponse {
-  data?: Post[];
-  error?: string;
-}

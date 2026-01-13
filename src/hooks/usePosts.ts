@@ -14,16 +14,26 @@ function usePosts(): UsePostsReturn {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Флаг для отмены запросов при размонтировании
+    let isCancelled = false;
+
     const fetchPosts = async () => {
       try {
         setLoading(true);
         setError(null);
         const data = await api.getPosts();
+
+        // Проверяем, что компонент еще смонтирован (после асинхронной операции)
+        if (isCancelled) return;
+
         setPosts(data);
+        setLoading(false);
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Неизвестная ошибка';
+        if (isCancelled) return;
+
+        const errorMessage =
+          err instanceof Error ? err.message : "Неизвестная ошибка";
         setError(errorMessage);
-      } finally {
         setLoading(false);
       }
     };
@@ -32,11 +42,17 @@ function usePosts(): UsePostsReturn {
 
     // Слушатель для восстановления соединения
     const handleOnline = () => {
-      fetchPosts();
+      if (!isCancelled) {
+        fetchPosts();
+      }
     };
 
-    window.addEventListener('online', handleOnline);
-    return () => window.removeEventListener('online', handleOnline);
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      isCancelled = true;
+      window.removeEventListener("online", handleOnline);
+    };
   }, []);
 
   return { posts, loading, error };

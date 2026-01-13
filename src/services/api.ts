@@ -5,14 +5,18 @@
 
 import { Post } from "../types";
 
+// Конфигурация API, env
 const API_BASE_URL = "https://cloud.codesupply.co/endpoint/react";
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000;
+const MAX_RETRIES = 3; // Максимум попыток при ошибках
+const RETRY_DELAY = 1000; // Базовая задержка между попытками (ms)
 
 interface FetchOptions extends RequestInit {
   headers?: Record<string, string>;
 }
 
+/**
+ * Кастомная ошибка для HTTP запросов
+ */
 export class ApiError extends Error {
   status: number;
   statusText: string;
@@ -34,6 +38,7 @@ class ApiService {
 
   /**
    * Выполняет fetch с повторными попытками
+   * Retry только для GET
    */
   private async fetchWithRetry(
     url: string,
@@ -41,22 +46,15 @@ class ApiService {
     retries: number = 0
   ): Promise<Response> {
     try {
-      // Проверка подключения
-      if (!navigator.onLine) {
-        throw new Error("Нет подключения к интернету");
-      }
+      const response = await fetch(url, options);
 
-      const response = await fetch(url, {
-        ...options,
-        headers: {
-          "Content-Type": "application/json",
-          ...options.headers,
-        },
-      });
+      // Проверяем, можно ли повторять запрос
+      const method = options.method ?? "GET";
+      const isRetryable = method === "GET";
 
       if (!response.ok) {
-        // Повторяем запрос при ошибках сервера (5xx)
-        if (response.status >= 500 && retries < MAX_RETRIES) {
+        // Повторяем только GET при 5xx
+        if (isRetryable && response.status >= 500 && retries < MAX_RETRIES) {
           await this.delay(RETRY_DELAY * (retries + 1));
           return this.fetchWithRetry(url, options, retries + 1);
         }
@@ -65,12 +63,7 @@ class ApiService {
 
       return response;
     } catch (error) {
-      // Проверка подключения при ошибке
-      if (!navigator.onLine) {
-        throw new Error("Нет подключения к интернету");
-      }
-
-      // Повторяем при сетевых ошибках
+      // TypeError = сетевая ошибка (нет сети, DNS fail, etc)
       if (retries < MAX_RETRIES && error instanceof TypeError) {
         await this.delay(RETRY_DELAY * (retries + 1));
         return this.fetchWithRetry(url, options, retries + 1);
@@ -81,78 +74,38 @@ class ApiService {
   }
 
   /**
-   * Выполняет запрос к API
+   * Базовый метод для запросов к API
+   * Проверяет Content-Type перед парсингом JSON
    */
   async request<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
     const response = await this.fetchWithRetry(url, options);
+
+    // Проверяем Content-Type (если есть)
+    const contentType = response.headers.get("content-type");
+    if (contentType && !contentType.includes("application/json")) {
+      throw new Error(
+        `Invalid response format: expected JSON, got ${contentType}`
+      );
+    }
+
     return response.json();
   }
 
   /**
-   * GET запрос
+   * Задержка с экспоненциальным ростом для retry
    */
-  async get<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-    return this.request<T>(endpoint, {
-      ...options,
-      method: "GET",
-    });
-  }
-
-  /**
-   * POST запрос
-   */
-  async post<T>(
-    endpoint: string,
-    data: unknown,
-    options: FetchOptions = {}
-  ): Promise<T> {
-    return this.request<T>(endpoint, {
-      ...options,
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-  }
-
-  /**
-   * PUT запрос
-   */
-  async put<T>(
-    endpoint: string,
-    data: unknown,
-    options: FetchOptions = {}
-  ): Promise<T> {
-    return this.request<T>(endpoint, {
-      ...options,
-      method: "PUT",
-      body: JSON.stringify(data),
-    });
-  }
-
-  /**
-   * DELETE запрос
-   */
-  async delete<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-    return this.request<T>(endpoint, {
-      ...options,
-      method: "DELETE",
-    });
-  }
-
-  /**
-   * Задержка для retry
-   */
-  delay(ms: number): Promise<void> {
+  private delay(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /**
-   * Получение постов
+   * Получение списка постов
    */
   async getPosts(): Promise<Post[]> {
-    return this.get<Post[]>("/data.json");
+    return this.request<Post[]>("/data.json");
   }
 }
 
-// Singleton instance
+// Экспортируем singleton для использования в приложении
 export const api = new ApiService();
