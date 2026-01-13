@@ -39,7 +39,7 @@
 @media (max-width: 767px) {
   .post-grid {
     gap: 1.875rem;
-    padding: 0.2rem 1.3rem;
+    padding: 3rem 1.3rem;
     grid-template-columns: 1fr;
   }
 
