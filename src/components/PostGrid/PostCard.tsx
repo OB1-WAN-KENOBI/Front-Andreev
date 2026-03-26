@@ -35,7 +35,7 @@ function PostCard({ post, onClick }: PostCardProps) {
         <h2 className="post-card-title">{post.title}</h2>
         <div className="post-card-meta">
           <span className="post-card-author">{post.autor}</span>
-          //  не вижу смысла использовать псевдоэлементы для •, так как их всего 2
+            {/* не вижу смысла использовать псевдоэлементы для •, так как их всего 2 */}
           <span className="post-card-separator">•</span>
           <span className="post-card-date">{post.date}</span>
           <span className="post-card-separator">•</span>
