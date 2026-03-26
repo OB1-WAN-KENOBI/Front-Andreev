@@ -94,26 +94,32 @@
   transition: transform var(--transition-medium) ease;
 }
 
-.mobile-menu-link .dropdown-arrow.open {
-  transform: rotate(180deg);
+.mobile-submenu-toggle {
+  /* Скрываем input, но оставляем управляемым label */
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .mobile-submenu {
   background-color: var(--color-submenu-bg);
   max-height: 0;
   overflow: hidden;
-  animation: slideDown var(--transition-medium) ease-in-out forwards;
+  opacity: 0;
+  transform: translateY(-0.25rem);
+  transition: max-height var(--transition-medium) ease-in-out,
+    opacity var(--transition-medium) ease-in-out,
+    transform var(--transition-medium) ease-in-out;
 }
 
-@keyframes slideDown {
-  from {
-    max-height: 0;
-    opacity: 0;
-  }
-  to {
-    max-height: 500px;
-    opacity: 1;
-  }
+.mobile-submenu-toggle:checked+.mobile-menu-link .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.mobile-submenu-toggle:checked~.mobile-submenu {
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .mobile-submenu-item {
@@ -134,6 +140,7 @@
 }
 
 @media (min-width: 1024px) {
+
   .mobile-menu-overlay,
   .mobile-menu {
     display: none;

@@ -1,12 +1,17 @@
 .post-grid {
-  max-width: 120rem;
+  max-width: calc(3 * 22.5rem + 2 * 40px + 4rem);
   margin: 0 auto;
   padding: 3rem 2rem;
-  display: grid;
-  grid-template-columns: repeat(3, 22.5rem);
-  gap: 40px;
-  margin-bottom: 7rem;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  column-gap: 40px;
+  row-gap: 40px;
+  margin-bottom: 7rem;
+}
+
+.post-grid .post-card {
+  flex: 0 0 22.5rem;
 }
 
 .post-grid-empty {
@@ -25,25 +30,37 @@
 /* Tablet */
 @media (min-width: 768px) and (max-width: 1023px) {
   .post-grid {
+    max-width: 120rem;
     padding: 3rem 4%;
-    gap: 2rem;
-    grid-template-columns: repeat(2, 1fr);
+    column-gap: 40px;
+    row-gap: 40px;
   }
 
   .post-grid-empty {
     padding: 3rem 4%;
+  }
+
+  .post-grid .post-card {
+    /* 2 колонки на планшетах */
+    flex: 0 0 calc((100% - 40px) / 2);
   }
 }
 
 /* Mobile */
 @media (max-width: 767px) {
   .post-grid {
-    gap: 1.875rem;
+    max-width: 120rem;
+    column-gap: 0;
+    row-gap: 1.875rem;
     padding: 3rem 1.3rem;
-    grid-template-columns: 1fr;
   }
 
   .post-grid-empty {
     padding: 2rem 1.5rem;
+  }
+
+  .post-grid .post-card {
+    /* 1 колонка на мобилках */
+    flex: 0 0 100%;
   }
 }

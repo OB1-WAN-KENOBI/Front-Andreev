@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useRef } from "react";
 import { MenuItem } from "../../types";
 import ArrowIcon from "../Icons/ArrowIcon";
 import { LogotypeIcon } from "../Icons/LogotypeIcon";
@@ -28,7 +28,7 @@ interface MobileMenuProps {
 }
 
 function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  const [openSubmenu, setOpenSubmenu] = useState<number | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -42,25 +42,22 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     };
   }, [isOpen]);
 
-  const handleMenuItemClick = (
-    e: MouseEvent<HTMLAnchorElement>,
-    item: MenuItem,
-    index: number
-  ) => {
-    if (item.submenu) {
-      e.preventDefault();
-      setOpenSubmenu(openSubmenu === index ? null : index);
-    } else {
-      setOpenSubmenu(null);
-      onClose();
-    }
-  };
+  // Сбрасываем CSS-toggle для подменю при закрытии, чтобы при повторном открытии
+  // не оставалось "открытого" состояния.
+  useEffect(() => {
+    if (isOpen) return;
+    const node = menuRef.current;
+    if (!node) return;
 
-  // Сброс подменю при закрытии меню
-  const handleClose = () => {
-    setOpenSubmenu(null);
-    onClose();
-  };
+    const toggles = node.querySelectorAll<HTMLInputElement>(
+      "input.mobile-submenu-toggle"
+    );
+    toggles.forEach((t) => {
+      t.checked = false;
+    });
+  }, [isOpen]);
+
+  const handleClose = () => onClose();
 
   return (
     <>
@@ -68,7 +65,7 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         className={`mobile-menu-overlay ${isOpen ? "open" : ""}`}
         onClick={handleClose}
       />
-      <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
+      <div ref={menuRef} className={`mobile-menu ${isOpen ? "open" : ""}`}>
         <div className="mobile-menu-header">
           <LogotypeIcon className="mobile-menu-logo" />
           <button
@@ -93,35 +90,52 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           <ul className="mobile-menu-list">
             {menuItems.map((item, index) => (
               <li key={index} className="mobile-menu-item">
-                <a
-                  href="#"
-                  className="mobile-menu-link"
-                  onClick={(e) => handleMenuItemClick(e, item, index)}
-                  aria-expanded={item.submenu ? openSubmenu === index : undefined}
-                >
-                  {item.label}
-                  {item.label !== "Buy Now" && (
-                    <ArrowIcon
-                      className={`dropdown-arrow ${
-                        openSubmenu === index ? "open" : ""
-                      }`}
+                {item.submenu ? (
+                  <>
+                    <input
+                      className="mobile-submenu-toggle"
+                      type="checkbox"
+                      id={`mobile-submenu-toggle-${index}`}
                     />
-                  )}
-                </a>
-                {item.submenu && openSubmenu === index && (
-                  <ul className="mobile-submenu">
-                    {item.submenu.map((subItem, subIndex) => (
-                      <li key={subIndex} className="mobile-submenu-item">
-                        <a
-                          href="#"
-                          className="mobile-submenu-link"
-                          onClick={handleClose}
+                    <label
+                      htmlFor={`mobile-submenu-toggle-${index}`}
+                      className="mobile-menu-link mobile-menu-link--toggle"
+                    >
+                      {item.label}
+                      <ArrowIcon className="dropdown-arrow" />
+                    </label>
+
+                    <ul className="mobile-submenu">
+                      {item.submenu.map((subItem, subIndex) => (
+                        <li
+                          key={subIndex}
+                          className="mobile-submenu-item"
                         >
-                          {subItem}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                          <a
+                            href="#"
+                            className="mobile-submenu-link"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleClose();
+                            }}
+                          >
+                            {subItem}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <a
+                    href="#"
+                    className="mobile-menu-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleClose();
+                    }}
+                  >
+                    {item.label}
+                  </a>
                 )}
               </li>
             ))}
