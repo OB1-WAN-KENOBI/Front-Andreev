@@ -95,10 +95,8 @@
 }
 
 .mobile-submenu-toggle {
-  /* Скрываем input, но оставляем управляемым label */
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
+  /* Удалено: переключение подменю теперь делается через hover/focus-within */
+  display: none;
 }
 
 .mobile-submenu {
@@ -112,14 +110,16 @@
     transform var(--transition-medium) ease-in-out;
 }
 
-.mobile-submenu-toggle:checked+.mobile-menu-link .dropdown-arrow {
-  transform: rotate(180deg);
-}
-
-.mobile-submenu-toggle:checked~.mobile-submenu {
+.mobile-menu-item:hover .mobile-submenu,
+.mobile-menu-item:focus-within .mobile-submenu {
   max-height: 500px;
   opacity: 1;
   transform: translateY(0);
+}
+
+.mobile-menu-item:hover .dropdown-arrow,
+.mobile-menu-item:focus-within .dropdown-arrow {
+  transform: rotate(180deg);
 }
 
 .mobile-submenu-item {

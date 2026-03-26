@@ -67,7 +67,7 @@
   background-color: var(--color-background);
   border: var(--border-width) solid var(--color-border);
   min-width: 11rem;
-  padding: 0.625rem 0;
+  padding: 0.9rem 0;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-0.5rem);
@@ -93,10 +93,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.625rem 1.25rem;
-  font-size: 0.8125rem;
+  padding: 0.3rem 1.25rem;
+  font-size: .8125rem;
   color: var(--color-text);
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color .2s, color .2s;
 }
 
 .submenu-link::after {
@@ -115,7 +115,7 @@
   .navigation {
     display: none;
   }
-  
+
   .navigation-container {
     padding: 0 var(--container-padding);
   }

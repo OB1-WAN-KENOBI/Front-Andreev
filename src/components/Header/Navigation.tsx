@@ -6,6 +6,9 @@ import "./Navigation.css";
 const menuItems: MenuItem[] = [
   {
     label: "Demos",
+  },
+  {
+    label: "Post",
     submenu: [
       "Post Header",
       "Post Layout",
@@ -14,7 +17,6 @@ const menuItems: MenuItem[] = [
       "Video Post",
     ],
   },
-  { label: "Post" },
   { label: "Features" },
   { label: "Categories" },
   { label: "Shop" },

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { MenuItem } from "../../types";
 import ArrowIcon from "../Icons/ArrowIcon";
 import { LogotypeIcon } from "../Icons/LogotypeIcon";
@@ -7,6 +7,9 @@ import "./MobileMenu.css";
 const menuItems: MenuItem[] = [
   {
     label: "Demos",
+  },
+  {
+    label: "Post",
     submenu: [
       "Post Header",
       "Post Layout",
@@ -15,7 +18,6 @@ const menuItems: MenuItem[] = [
       "Video Post",
     ],
   },
-  { label: "Post" },
   { label: "Features" },
   { label: "Categories" },
   { label: "Shop" },
@@ -28,8 +30,6 @@ interface MobileMenuProps {
 }
 
 function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  const menuRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -42,21 +42,6 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     };
   }, [isOpen]);
 
-  // Сбрасываем CSS-toggle для подменю при закрытии, чтобы при повторном открытии
-  // не оставалось "открытого" состояния.
-  useEffect(() => {
-    if (isOpen) return;
-    const node = menuRef.current;
-    if (!node) return;
-
-    const toggles = node.querySelectorAll<HTMLInputElement>(
-      "input.mobile-submenu-toggle"
-    );
-    toggles.forEach((t) => {
-      t.checked = false;
-    });
-  }, [isOpen]);
-
   const handleClose = () => onClose();
 
   return (
@@ -65,7 +50,7 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         className={`mobile-menu-overlay ${isOpen ? "open" : ""}`}
         onClick={handleClose}
       />
-      <div ref={menuRef} className={`mobile-menu ${isOpen ? "open" : ""}`}>
+      <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
         <div className="mobile-menu-header">
           <LogotypeIcon className="mobile-menu-logo" />
           <button
@@ -92,18 +77,14 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               <li key={index} className="mobile-menu-item">
                 {item.submenu ? (
                   <>
-                    <input
-                      className="mobile-submenu-toggle"
-                      type="checkbox"
-                      id={`mobile-submenu-toggle-${index}`}
-                    />
-                    <label
-                      htmlFor={`mobile-submenu-toggle-${index}`}
+                    <button
+                      type="button"
                       className="mobile-menu-link mobile-menu-link--toggle"
+                      aria-haspopup="true"
                     >
                       {item.label}
                       <ArrowIcon className="dropdown-arrow" />
-                    </label>
+                    </button>
 
                     <ul className="mobile-submenu">
                       {item.submenu.map((subItem, subIndex) => (

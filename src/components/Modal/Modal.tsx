@@ -65,7 +65,8 @@ function Modal({ post, onClose }: ModalProps) {
           <div className="modal-content">
             <div className="modal-image-wrapper">
               <img
-                src={post.img_2x || post.img}
+                src={post.img}
+                srcSet={`${post.img} 1x, ${post.img_2x || post.img} 2x`}
                 alt={sanitizedTitle}
                 className="modal-image"
               />
