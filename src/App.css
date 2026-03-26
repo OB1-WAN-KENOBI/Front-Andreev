@@ -1,0 +1,27 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.loading-state,
+.error-state {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.loading-state p {
+  font-size: 1.125rem;
+  color: var(--color-meta);
+}
+
+.error-state p {
+  font-size: 1.125rem;
+  color: var(--color-accent);
+}
